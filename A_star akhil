@@ -1,0 +1,39 @@
+from queue import PriorityQueue
+n=int(input("Enter no.of vertices : "))
+graph=[[] for i in range(n)]
+path=""
+minCost=99999
+def solve(s,d,h,visited,currpath,cost):
+    global path,minCost
+    if s==d:
+        if(cost<minCost):
+            path=currpath
+            minCost=cost
+        return
+    pq=PriorityQueue()
+    visited[s]=True
+    for v,c in graph[s]:
+        if(visited[v]==False):
+            pq.put((cost+c+h[v],v))
+    while pq.empty()==False:
+        fn,v=pq.get()
+        solve(v,d,h,visited,currpath+" -> "+str(v),fn-h[v])
+    visited[s]=False
+e=int(input("Enter no.of edges : "))
+for i in range(e):
+ u,v,c=map(int,input().split())
+    graph[u].append((v,c))
+h=[]
+print("Enter heuristic values : ")
+for i in range(n):
+    h.append(int(input()))
+s=int(input("Enter source : "))
+d=int(input("Enter destination : "))
+visited=[False]*n
+solve(s,d,h,visited,str(s),0);
+if path:
+    print("Found")
+    print("Path : ",path)
+    print("Cost : ",minCost)
+else:
+    print("Not found")
