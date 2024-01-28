@@ -1,0 +1,298 @@
+from collections import defaultdict
+class Solution:
+    def __init__(self,headname):
+        self.family=defaultdict(list)
+        self.head=headname
+        self.dead=set()
+    def birth(self,pname,cname):
+        self.family[pname].append(cname)
+    def death(self,name):
+        self.dead.add(name)
+    def inheritance(self):
+        self.ans=[]
+        self.dfs(self.head)
+        return self.ans
+    def dfs(self,current):
+        if current not in self.dead:
+            self.ans.append(current)
+        for child in self.family[current]:
+            self.dfs(child)
+ob = Solution('Paul') 
+ob.birth('Paul', 'Zach')
+ob.birth('Paul', 'David') 
+ob.birth('Zach', 'Emma') 
+ob.birth('David', 'Sophia') 
+ob.death('Paul') 
+result = ob.inheritance() 
+print(result)
+
+
+_______________________________________________________________________________________________________ 
+from collections import defaultdict
+visited=defaultdict(bool)
+jug1=int(input("ENter the amount of jug1 : "))
+jug2=int(input("Enter the amount of jug2 : "))
+aim=int(input("aim"))
+def wjp(amt1,amt2):
+    if(amt1==0 and amt2==aim) or (amt1==aim and amt2==0):
+        print(amt1,amt2)
+        return True
+    if not visited[(amt1,amt2)]:
+        print(amt1,amt2)
+        visited[(amt1,amt2)]=True
+        return (wjp(0,amt2) or
+                wjp(amt1,0) or
+                wjp(jug1,amt2) or
+                wjp(amt1,jug2) or
+                wjp(amt1+min(amt2,(jug1-amt1)),amt2-min(amt2,(jug1-amt1))) or
+                wjp(amt1-min(amt1,(jug2-amt2)),amt2+min(amt1,(jug2-amt2))))
+    return False;
+
+print("Steps")
+print(wjp(0,0))
+_________________________________________________________________________________________--
+from queue import PriorityQueue
+def bfs(act, target, n):
+    visited = [False] * n
+    pq = PriorityQueue()
+    pq.put((0, act))
+    visited[act] = True
+    while not pq.empty():
+        u = pq.get()[1]
+        print(u, end=" ")
+        if u == target:
+            break
+        for v, c in graph[u]:
+            if not visited[v]:
+                visited[v] = True
+                pq.put((c, v))
+
+def add_edge(x, y, cost):
+    graph[x].append((y, cost))
+    graph[y].append((x, cost))
+n = int(input("Enter no.of vertices : "))
+graph = [[] for i in range(0, n)]
+x = int(input("Enter no.of Edges : "))
+for i in range(0, x):
+    print("Enter source target cost : ")
+    a, b, c = map(int, input().split())
+    add_edge(a, b, c)
+print("Enter source and target : ")
+p, q = map(int, input().split())
+bfs(p, q, n)
+
+______________________________________________________________________________________
+def dfs(visited,graph,node):
+    if node not in visited:
+        print(node)
+        visited.add(node)
+        for child in graph[node]:
+            dfs(visited,graph,child)
+graph={}
+n=int(input("Enter no.of vertices : "))
+for i in range(n):
+    v=input("Enter the vertex : ")
+    ans=input("Enter the childern : ").split()
+    graph[v]=ans
+visited=set()
+s=input("Enter the starting node : ")
+dfs(visited,graph,s)
+
+______________________________________________________________________________________
+nv=int(input("Enter no.of vertices : "))
+ne=int(input("Enter no.of edges : "))
+cost=[[0]*nv for i in range(nv)]
+dl=int(input("Enter the depth limit : "))
+s=int(input("Enter the starting node : "))
+for i in range(ne):
+    v1,v2=map(int,input().split())
+    cost[v1][v2]=1
+visited=[False]*nv
+def dls(cost,s,depth,visited,depthlimit):
+    if depth==depthlimit:
+        return
+    visited[s]=True
+    print(s,end=" ")
+    for i in range(len(cost)):
+        if(cost[s][i]!=0 and not visited[i]):
+            dls(cost,i,depth+1,visited,depthlimit)
+dls(cost,s,0,visited,dl)
+
+________________________________________________________________________________________--
+def valid(row,col,queens):
+    for i in range(row):
+        if queens[i]==col or abs(i-row)==abs(queens[i]-col):
+            return False
+    return True
+def recur(row,queens,n):
+    if row==n:
+        for i in range(n):
+            for j in range(n):
+                if queens[i]==j:
+                    print('Q',end=" ")
+                else:
+                    print("_",end=" ")
+            print()
+        print()
+        return
+    for col in range(n):
+        if valid(row,col,queens):
+            queens[row]=col
+            recur(row+1,queens,n)
+n=int(input("Enter no.of queens : "))
+queens=[-1]*n
+recur(0,queens,n)
+
+___________________________________________________________________________________
+def addedge(adj,u,v):
+    adj[u].append(v)
+    adj[v].append(u)
+def graphcoloring(adj,v):
+    colors=['red','blue','green','orange']
+    result=[""]*v
+    available=[False]*v
+    result[0]='red'
+    for u in range(1,v):
+        for i in adj[u]:
+            if result[i]!="":
+                available[colors.index(result[i])]=True
+        cr=0
+        while cr<v:
+            if available[cr]==False:
+                break
+            cr+=1
+        result[u]=colors[cr]
+        for i in adj[u]:
+            if result[i]!="":
+                available[colors.index(result[i])]=False
+    for u in range(v):
+        print("Vertex",u,"--->",result[u])
+n=int(input("Enter no.of vertices : "))
+graph=[[] for i in range(n)]
+e=int(input("Enter no.of edges : "))
+for i in range(e):
+    print("Enter the edges : ")
+    v1,v2=map(int,input().split())
+    addedge(graph,v1,v2)
+graphcoloring(graph,n)
+
+        
+_____________________________________________________________________________________-
+from kanren import run,var,fact
+from kanren.assoccomm import commutative,associative
+from kanren.assoccomm import eq_assoccomm as eq
+addition="add"
+multiplication="mul"
+fact(commutative,addition)
+fact(commutative,multiplication)
+fact(associative,addition)
+fact(associative,multiplication)
+x,y,z=var('a'),var('b'),var('c')
+original=(multiplication,(addition,y,z),x)
+ex1=(multiplication,(addition,8,9),3)
+ex2=(addition,(multiplication,56,71),3)
+ex3=(multiplication,12,(addition,43,15))
+print(run(0,(x,y,z),eq(original,ex1)))
+print(run(0,(x,y,z),eq(original,ex2)))
+print(run(0,(x,y,z),eq(original,ex3)))
+_______________________________________________________________________________________---
+def aStarAlgo(start_node, stop_node):       
+        open_set = set(start_node) 
+        closed_set = set()
+        g = {} 
+        parents = {} 
+        g[start_node] = 0
+        parents[start_node] = start_node         
+        while len(open_set) > 0:
+            n = None 
+            for v in open_set:
+                if n == None or g[v] + heuristic(v) < g[n] + heuristic(n):
+                    n = v                     
+            if n == stop_node or Graph_nodes[n] == None:
+                pass
+            else:
+                for (m, weight) in get_neighbors(n):
+                    if m not in open_set and m not in closed_set:
+                        open_set.add(m)
+                        parents[m] = n
+                        g[m] = g[n] + weight
+                    else:
+                        if g[m] > g[n] + weight:
+                            g[m] = g[n] + weight
+                            parents[m] = n
+                            if m in closed_set:
+                                closed_set.remove(m)
+                                open_set.add(m) 
+            if n == None:
+                print('Path does not exist!')
+                return None
+            if n == stop_node:
+                path = []
+                while parents[n] != n:
+                    path.append(n)
+                    n = parents[n]
+ 
+                path.append(start_node)
+ 
+                path.reverse()
+ 
+                print('Path found: {}'.format(path))
+                return path
+            open_set.remove(n)
+            closed_set.add(n) 
+        print('Path does not exist!')
+        return None
+def get_neighbors(v):
+    if v in Graph_nodes:
+        return Graph_nodes[v]
+    else:
+        return None
+def heuristic(n):
+        H_dist = {
+            'A': 11,
+            'B': 6,
+            'C': 99,
+            'D': 1,
+            'E': 7,
+            'G': 0,             
+        }
+        return H_dist[n]  
+Graph_nodes = {
+    'A': [('B', 2), ('E', 3)],
+    'B': [('C', 1),('G', 9)],
+    'C': None,
+    'E': [('D', 6)],
+    'D': [('G', 1)],     
+}
+aStarAlgo('A', 'G')
+____________________________________________________________________________________----
+n=int(input("Vertices : "))
+graph={}
+for i in range(n):
+    v=input("Enter vertex : ")
+    ans=input("Enter children : ").split()
+    graph[v]=ans
+s=input("Source : ")
+t=input("target : ")
+l=int(input("limit: "))
+def depth(graph,start,stop,limit):
+    visited=set()
+    def dls(node,depth):
+        if depth>limit:
+            return False
+        print(node,end=" ")
+        visited.add(node)
+        if node==stop:
+            return True
+        for child in graph[node]:
+            if child not in visited:
+                if dls(child,depth+1):
+                    return True
+        return False
+    print("depth_limit")
+    if not dls(start,0):
+        print("not found")
+depth(graph,s,t,l)
+
+
+
